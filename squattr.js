@@ -1,7 +1,6 @@
 $(function() {
-
-$('#results').empty();
 $('#city').focus();
+//$('#search_box').css('display' , 'none');
 
 $('#search').click(function(){
 	$('#search_box').fadeIn();

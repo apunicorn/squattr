@@ -30,7 +30,7 @@
  			Search Unoccupied Spaces
  		</div>
  		<div id="search_form">
- 			<form action="#" method="post">
+ 			<form action="" method="post">
 	 			<input type="text" id="city" name="city" placeholder="City" />
 	 			<input type="date" id="date" name="date" />
 	 			<input type="submit" id="submitted" value="Go" />
@@ -40,12 +40,25 @@
  	<div id="results">
 	 	<?php 
 				//form data variable setup with validation:
+	 			$a_city;
+
 				if(!empty($_REQUEST['city'])){
+					$a_city = true;
 					$city = $_REQUEST['city'];
-				} else {
+				}  else {
+					$a_city = false;
+					//echo '<p class="error">Please enter a city name</p>';
+				}
+				if (ctype_alpha(str_replace(' ', '', $city)) === false) {
+					$a_city = false;
+					//echo '<p class="error">Please enter a city name</p>';
+				} 
+
+				if(!$a_city){
 					$city = NULL;
 					echo '<p class="error">Please enter a city name</p>';
 				}
+
 				if(!empty($_REQUEST['date'])){
 					$date = $_REQUEST['date'];
 				} else {
@@ -53,7 +66,7 @@
 					echo '<p class="error">Please specify a date</p>';
 				}
 
-				if(!empty($_REQUEST['city']) && !empty($_REQUEST['date'])){
+				if($city && !empty($_REQUEST['date'])){
 				//print out the info from above:
 				echo "<p>Search results for <b>$city</b> on <b>$date</b></p>";
 				}

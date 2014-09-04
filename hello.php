@@ -27,13 +27,13 @@
  			x
  		</div>
  		<div id="search_title">
- 			Search Unoccupied Spaces
+ 			Search Currently Vacant Spaces
  		</div>
  		<div id="search_form">
  			<form action="" method="post">
 	 			<input type="text" id="city" name="city" placeholder="City" />
 	 			<!--<input type="date" id="date" name="date" />-->
-	 			<select name="month">
+	 			<!-- <select name="month">
 	 				<option value="January">January</option>
 	 				<option value="February">February</option>
 	 				<option value="March">March</option>
@@ -49,40 +49,74 @@
 	 			<select name="year">
 	 				<option value="2014">2014</option>
 	 				<option value="2015">2015</option>
-	 			</select>
+	 			</select> -->
 	 			<input type="submit" name="submit" id="submitted" value="Go" />
 	 			<!--<div id="go">Go</div>-->
  		</div>
  	</div>
+ 		<?php
+ 			$username = "root";
+	 		$password = "p1ramidkiN";
+	 		$hostname = "localhost";
+	 		$dbname = "squats"; 
+
+				//connection to the database
+	 		$dbhandle = mysql_connect($hostname, $username, $password) 
+	 		or die("Unable to connect to MySQL");
+	 		echo '<div class="connection">Connected to MySQL</div>';
+
+	 		//select the database to work with
+			$selected = mysql_select_db($dbname, $dbhandle) 
+			  or die("This database don't exist");
+ 		?>
  	<div id="results">
-	 	<?php 
-				//form data variable setup with validation:
-	 			$a_city;
-	 			$month = $_REQUEST['month'];
-	 			$year = $_REQUEST['year'];
+ 		<?php 
 
-				if(!empty($_REQUEST['city'])){
-					$a_city = true;
-					$city = $_REQUEST['city'];
-				}  else {
-					$a_city = false;
-				}
-				if (ctype_alpha(str_replace(' ', '', $city)) === false) {
-					$a_city = false;
-					
-				} 
+		//execute the SQL query and return records
+		$result = mysql_query("SELECT type, name, city FROM listing")
+		or die("Nope!");
+		//fetch tha data from the database
+		while ($row = mysql_fetch_array($result)) {
+		   echo "Type: ".$row{'type'}." Name: ".$row{'name'}." City: ".$row{'city'}."<br>";
+		}
 
-				if(!$a_city){
-					$city = NULL;
-					echo '<p class="error">Please enter a city name</p>';
-				} else {
-					echo "<p>Search results for <b>$city</b> on <b>$month $year</b></p>";
-				}
+		if(!empty($_REQUEST['city'])){
+	 		$city = trim($_REQUEST['city']);
+	 		echo "<p>Search results for <b>$city</b></p>";
+ 		} else {
+ 			echo '<p class="error">Please enter a city name</p>';
+ 			exit();
+ 		}
 
-				
+		mysql_close($dbhandle);
 
-			?>
- </body>
+		//form data variable setup with validation:
+ 		// $a_city;
+	 	// // $month = $_REQUEST['month'];
+	 	// // $year = $_REQUEST['year'];
+
+ 		// if(!empty($_REQUEST['city'])){
+ 		// 	$a_city = true;
+ 		// 	$city = $_REQUEST['city'];
+ 		// }  else {
+ 		// 	$a_city = false;
+ 		// }
+ 		// if (ctype_alpha(str_replace(' ', '', $city)) === false) {
+ 		// 	$a_city = false;
+
+ 		// } 
+
+ 		// if(!$a_city){
+ 		// 	$city = NULL;
+ 		// 	echo '<p class="error">Please enter a city name</p>';
+ 		// } else {
+ 		// 	echo "<p>Search results for <b>$city</b></p>";
+ 		// }
+
+
+
+ 		?>
+ 	</body>
 </html>
 
 <!--  <?php 

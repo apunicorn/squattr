@@ -5,25 +5,30 @@
 	</head>
 	<body>
 		<?php 
-			//form data variable setup with validation:
-			if(!empty($_REQUEST['city'])){
-				$city = $_REQUEST['city'];
-			} else {
-				$city = NULL;
-				echo '<p class="error">Please enter a city name</p>';
-			}
-			if(!empty($_REQUEST['date'])){
-				$date = $_REQUEST['date'];
-			} else {
-				$date = NULL;
-				echo '<p class="error">Please specify a date</p>';
-			}
+				//form data variable setup with validation:
+	 			$a_city;
+	 			$month = $_REQUEST['month'];
 
-			if(!empty($_REQUEST['city']) && !empty($_REQUEST['date'])){
-			//print out the info from above:
-			echo "<p>Search results for <b>$city</b> on <b>$date</b></p>";
-			}
+				if(!empty($_REQUEST['city'])){
+					$a_city = true;
+					$city = $_REQUEST['city'];
+				}  else {
+					$a_city = false;
+				}
+				if (ctype_alpha(str_replace(' ', '', $city)) === false) {
+					$a_city = false;
+					
+				} 
 
-		?>
+				if(!$a_city){
+					$city = NULL;
+					echo '<p class="error">Please enter a city name</p>';
+				} else {
+					echo "<p>Search results for <b>$city</b> on <b>$month</b></p>";
+				}
+
+				
+
+			?>
 	</body>
 </html>

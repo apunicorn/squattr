@@ -61,34 +61,53 @@
 	 		$dbname = "squats"; 
 
 				//connection to the database
-	 		$dbhandle = mysql_connect($hostname, $username, $password) 
+	 		$database = mysql_connect($hostname, $username, $password) 
 	 		or die("Unable to connect to MySQL");
-	 		echo '<div class="connection">Connected to MySQL</div>';
+	 		echo 'Connected to MySQL';
 
 	 		//select the database to work with
-			$selected = mysql_select_db($dbname, $dbhandle) 
+			$selected = mysql_select_db($dbname, $database) 
 			  or die("This database don't exist");
  		?>
  	<div id="results">
  		<?php 
 
 		//execute the SQL query and return records
-		$result = mysql_query("SELECT type, name, city FROM listing")
-		or die("Nope!");
-		//fetch tha data from the database
-		while ($row = mysql_fetch_array($result)) {
-		   echo "Type: ".$row{'type'}." Name: ".$row{'name'}." City: ".$row{'city'}."<br>";
-		}
+		// $result = mysql_query("SELECT type, name, city FROM listing")
+		// or die("Nope!");
+		// //fetch tha data from the database
+		// while ($row = mysql_fetch_array($result)) {
+		//    echo "Type: ".$row{'type'}." Name: ".$row{'name'}." City: ".$row{'city'}."<br>";
+		// }
+
 
 		if(!empty($_REQUEST['city'])){
 	 		$city = trim($_REQUEST['city']);
-	 		echo "<p>Search results for <b>$city</b></p>";
+	 		//search MYSQL
+	 		$query = "SELECT * FROM listing WHERE city LIKE '$city'";
+	 		$results = mysql_query($query) or die("Error getting query");
+	 		if($row = mysql_num_rows($results)){
+		 		//grabbing the results from the mysql table:
+		 		//$row = mysql_fetch_array($results) or die("No results for $city");
+		 		//echo $row['name']; 
+		 		echo '<div class="results_title">Search results for <b>'.$city.'</b></div>';
+		 		//check if there is a record for this search query and spit out the info
+
+
+		 		while($row = mysql_fetch_array($results)){
+		 			echo "<br />";
+		 			echo "<p>".$row['name']. "-" .$row['description']."</p>";
+		 		}
+		 	} else {
+		 		echo '<div class="results_title">No results for <b>'.$city.'</b></div>';
+		 	}
  		} else {
  			echo '<p class="error">Please enter a city name</p>';
  			exit();
  		}
 
-		mysql_close($dbhandle);
+ 		//close the database connection
+		mysql_close($database);
 
 		//form data variable setup with validation:
  		// $a_city;
@@ -119,13 +138,3 @@
  	</body>
 </html>
 
-<!--  <?php 
-
- $test_string = 'BURRITO';
- $other_test = 'TIME';
- $new_word = $test_string .'+'. $other_test;
-
- echo "<p>$new_word</p>"; 
-
-
- ?>  -->
